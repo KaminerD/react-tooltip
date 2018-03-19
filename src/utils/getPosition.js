@@ -14,7 +14,7 @@
  * - `newState` {Object}
  * - `position` {OBject} {left: {Number}, top: {Number}}
  */
-export default function (e, target, node, place, effect, offset) {
+export default function (e, target, node, place, effect, offset, absPos) {
   const tipWidth = node.clientWidth
   const tipHeight = node.clientHeight
   const {mouseX, mouseY} = getCurrentOffset(e, target, effect)
@@ -42,6 +42,17 @@ export default function (e, target, node, place, effect, offset) {
   const getTipOffsetBottom = (place) => {
     const offset_Y = defaultOffset[place].b
     return mouseY + offset_Y + extraOffset_Y
+  }
+
+  if (absPos)
+  {
+    return {
+      isNewState: false,
+      position: {
+        left: absPos.x != null ? absPos.x : parseInt(getTipOffsetLeft(place) - parentLeft, 10),
+        top: absPos.y  != null ? absPos.y : parseInt(getTipOffsetTop(place) - parentTop, 10)
+      }
+    }
   }
 
   // Judge if the tooltip has over the window(screen)

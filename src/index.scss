@@ -140,6 +140,22 @@
       margin-left: -8px;
     }
   }
+  &.nudge-left {
+    &:before {
+      left: 20%;
+    }
+    &:after {
+      left: 20%;
+    }
+  }
+  &.nudge-right {
+    &:before {
+      left: 80%;
+    }
+    &:after {
+      left: 80%;
+    }
+  }
   &.place-bottom {
     margin-top: 10px;
     &:before {

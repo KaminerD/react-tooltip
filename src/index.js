@@ -36,6 +36,7 @@ class ReactTooltip extends Component {
     type: PropTypes.string,
     effect: PropTypes.string,
     offset: PropTypes.object,
+    absPos: PropTypes.object,
     multiline: PropTypes.bool,
     border: PropTypes.bool,
     insecure: PropTypes.bool,
@@ -56,7 +57,8 @@ class ReactTooltip extends Component {
     disable: PropTypes.bool,
     scrollHide: PropTypes.bool,
     resizeHide: PropTypes.bool,
-    wrapper: PropTypes.string
+    wrapper: PropTypes.string,
+    nudge: PropTypes.string
   };
 
   static defaultProps = {
@@ -272,6 +274,8 @@ class ReactTooltip extends Component {
       placeholder,
       isEmptyTip,
       place: e.currentTarget.getAttribute('data-place') || this.props.place || 'top',
+      nudge: e.currentTarget.getAttribute('nudge') || this.props.nudge,
+      absPos: e.currentTarget.getAttribute('absPos') || this.props.absPos,
       type: e.currentTarget.getAttribute('data-type') || this.props.type || 'dark',
       effect: switchToSolid && 'solid' || this.getEffect(e.currentTarget),
       offset: e.currentTarget.getAttribute('data-offset') || this.props.offset || {},
@@ -387,9 +391,9 @@ class ReactTooltip extends Component {
 
   // Calculation the position
   updatePosition () {
-    const {currentEvent, currentTarget, place, effect, offset} = this.state
+    const {currentEvent, currentTarget, place, effect, offset, absPos} = this.state
     const node = ReactDOM.findDOMNode(this)
-    const result = getPosition(currentEvent, currentTarget, node, place, effect, offset)
+    const result = getPosition(currentEvent, currentTarget, node, place, effect, offset, absPos)
 
     if (result.isNewState) {
       // Switch to reverse placement
@@ -428,6 +432,8 @@ class ReactTooltip extends Component {
     const {placeholder, extraClass, html, ariaProps, disable, isEmptyTip} = this.state
     let tooltipClass = classname(
       '__react_component_tooltip',
+      {'nudge-left': this.state.nudge === 'left' },
+      {'nudge-right': this.state.nudge === 'right' },
       {'show': this.state.show && !disable && !isEmptyTip},
       {'border': this.state.border},
       {'place-top': this.state.place === 'top'},
